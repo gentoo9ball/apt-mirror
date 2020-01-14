@@ -755,7 +755,8 @@ sub need_update
 
     my ( undef, undef, undef, undef, undef, undef, undef, $size ) = _stat($filename);
 
-    return 1 unless ($size);
+    return 1  unless (defined $size);
+    return 1  if ($size <= 0);
     return 0 if $size_on_server == $size;
     return 1;
 }
@@ -824,7 +825,7 @@ sub process_index
                 add_url_to_download( $uri . "/" . $lines{"Filename:"}, $lines{"Size:"} );
             }
         }
-        else
+        elsif ( exists $lines{"Files:"} )
         {    # Sources index
             foreach ( split( /\n/, $lines{"Files:"} ) )
             {
